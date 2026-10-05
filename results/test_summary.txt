@@ -1,0 +1,9 @@
+JUnit 5 verification on Temurin JDK 21.0.12.1
+Date: 2026-10-05
+Command: ./run.ps1 -Task test
+
+edu.daa.DynamicArrayTest: tests=17, failures=0, errors=0, skipped=0
+edu.daa.MinHeapTest: tests=13, failures=0, errors=0, skipped=0
+edu.daa.MyLinkedListTest: tests=17, failures=0, errors=0, skipped=0
+
+Total: 47 tests; 0 failures; 0 errors; 0 skipped.

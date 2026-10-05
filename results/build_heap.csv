@@ -1,0 +1,9 @@
+n,method,time_ms,comparisons
+100,Floyd,0.0118,184
+100,RepeatedInsert,0.0083,194
+1000,Floyd,0.0932,1857
+1000,RepeatedInsert,0.0874,2232
+10000,Floyd,0.2938,18740
+10000,RepeatedInsert,0.9155,22593
+100000,Floyd,2.3075,188424
+100000,RepeatedInsert,3.0977,227662
