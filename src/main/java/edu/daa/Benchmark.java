@@ -14,6 +14,7 @@ public final class Benchmark {
     private static final int[] SIZES = {100, 1_000, 10_000, 100_000};
     private static final int WARMUP_RUNS = 2;
     private static final int MEASURED_RUNS = 5;
+    private static final int PREHEAT_CYCLES = 20;
     private static volatile long sink;
 
     private record Sample(long nanos, long steps, long moves, long comparisons, long checksum) { }
@@ -24,6 +25,7 @@ public final class Benchmark {
         Path results = Path.of("results");
         Files.createDirectories(results);
         writeEnvironment(results);
+        preheat();
         try (BufferedWriter csv = Files.newBufferedWriter(results.resolve("results.csv"), StandardCharsets.UTF_8);
              BufferedWriter raw = Files.newBufferedWriter(results.resolve("raw_runs.csv"), StandardCharsets.UTF_8)) {
             csv.write("workload,variant,structure,n,time_ms,steps,moves,comparisons\n");
@@ -42,6 +44,24 @@ public final class Benchmark {
         measureMemory(results);
         System.out.println("Finished: 36 benchmark cases, 180 measured runs; bonus CSV files written.");
         System.out.println("Consumed checksum: " + sink);
+    }
+
+    private static void preheat() {
+        // Exercise every kernel before the smallest cases so initial JIT work
+        // is less likely to dominate them. These runs are never recorded.
+        for (int cycle = 0; cycle < PREHEAT_CYCLES; cycle++) {
+            for (int structure = 0; structure < 2; structure++) {
+                consume(execute("W1", "-", structure, 1_000));
+                consume(execute("W2", "-", structure, 1_000));
+                consume(execute("W3", "head", structure, 1_000));
+                consume(execute("W3", "middle", structure, 1_000));
+            }
+            consume(execute("W4", "-", 2, 1_000));
+            MinHeap heap = new MinHeap();
+            heap.buildHeap(data(1_000, new Random(42)));
+            sink ^= heap.peekMin();
+        }
+        System.out.println("Discarded " + PREHEAT_CYCLES + " global preheat cycles at n=1000.");
     }
 
     private static void measure(BufferedWriter csv, BufferedWriter raw, String workload,
@@ -213,7 +233,8 @@ public final class Benchmark {
                 + "os.name=" + System.getProperty("os.name") + "\n"
                 + "os.arch=" + System.getProperty("os.arch") + "\n"
                 + "available.processors=" + Runtime.getRuntime().availableProcessors() + "\n"
-                + "seed=42\nwarmup.runs=" + WARMUP_RUNS + "\nmeasured.runs=" + MEASURED_RUNS + "\n"
+                + "seed=42\npreheat.cycles=" + PREHEAT_CYCLES + "\npreheat.n=1000\nwarmup.runs="
+                + WARMUP_RUNS + "\nmeasured.runs=" + MEASURED_RUNS + "\n"
                 + "w3.order=1000 inserts then 1000 removes; middle index uses original n/2\n"
                 + "timing=W1-W3 setup excluded; W4 insert/extract and sorted check included\n";
         Files.writeString(results.resolve("environment.properties"), text, StandardCharsets.UTF_8);

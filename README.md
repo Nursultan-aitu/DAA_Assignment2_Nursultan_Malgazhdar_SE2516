@@ -33,7 +33,7 @@ On Linux/macOS with `JAVA_HOME` configured:
 ./mvnw compile exec:java
 ```
 
-Python is needed only to regenerate graphs and the PDF, not to compile or run the Java project:
+Python 3.11 or newer is needed only to regenerate graphs and the PDF, not to compile or run the Java project:
 
 ```sh
 python -m pip install -r tools/requirements.txt
@@ -79,9 +79,9 @@ Each case uses sizes 100, 1,000, 10,000, and 100,000. Every run recreates `new R
 - W3: 1,000 insertions followed by 1,000 removals, separately at index 0 and at the **original** `n / 2`. Inserting first makes the case valid even when `n=100`.
 - W4: insert all `n` values and extract all of them, checking non-decreasing output.
 
-Each case has **two discarded warm-ups followed by five measured runs**. The CSV records their median time. Input generation, filling, and query generation are excluded from W1-W3 timers; counters reset after filling. W4 times insertion plus extraction and its inexpensive ordering/checksum checks. Construction-only bonus timers exclude validation. Counters and checksums must agree across all five runs or the benchmark fails. A volatile checksum consumes results outside the sequence timings. There are 36 required cases and 180 raw measurements.
+The JVM first performs **20 discarded preheat cycles of every workload at n=1,000**, including Floyd construction. Each recorded case then has **two discarded warm-ups followed by five measured runs**. The CSV records their median time. Input generation, filling, and query generation are excluded from W1-W3 timers; counters reset after filling. W4 times insertion plus extraction and its inexpensive ordering/checksum checks. Construction-only bonus timers exclude validation. Counters and checksums must agree across all five runs or the benchmark fails. A volatile checksum consumes results outside the sequence timings. There are 36 required cases and 180 raw measurements.
 
-Two warm-ups and a fixed case order do not eliminate every JIT/GC effect: small-n results must not be read as precise cross-machine speed ratios. Instrumentation adds overhead to the code being measured. The benchmark measures elapsed time and logical counted operations, not CPU cache-miss hardware events.
+Global preheating and case warm-ups do not eliminate every JIT/GC effect: small-n results must not be read as precise cross-machine speed ratios. Instrumentation adds overhead to the code being measured. The benchmark measures elapsed time and logical counted operations, not CPU cache-miss hardware events.
 
 ## Exact counter conventions
 
@@ -97,7 +97,7 @@ The initial placement of a newly supplied array/heap insertion value is not relo
 
 ## Testing and bonuses
 
-47 JUnit 5 tests cover empty/singleton/duplicate/extreme-int inputs, first/last/invalid indices, growth, tail repair, reuse after emptying, deterministic metrics, and mixed random operations against `ArrayList`/`PriorityQueue`. Heap tests check the parent-child property after every insertion/extraction and non-decreasing output. Build-heap tests cover replacement, defensive copying, empty and null input.
+47 JUnit 5 tests cover empty/singleton/duplicate/extreme-int inputs, first/last/invalid indices, growth, tail repair, reuse after emptying, deterministic metrics, and mixed random operations against `ArrayList`/`PriorityQueue`. Heap tests check the parent-child property after every insertion/extraction and non-decreasing output. Build-heap tests cover replacement, defensive copying, and empty input.
 
 Bonus A uses JOL `GraphLayout.parseInstance(structure).totalSize()`: the reachable structure object, metrics object, node objects or allocated backing array are included. The separate benchmark input array, class metadata, and JVM process overhead are excluded. Arrays retain spare capacity. On this VM nodes occupy 24 bytes; compressed references and 8-byte alignment matter. JOL's Serviceability Agent could not attach on this machine, so its diagnostic file warns that addresses are guessed; no result relies on object addresses.
 
