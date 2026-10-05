@@ -1,0 +1,11 @@
+# VM mode: 64 bits
+# Compressed references (oops): 3-bit shift
+# Compressed class pointers: 3-bit shift
+# WARNING | Compressed references base/shifts are guessed by the experiment!
+# WARNING | Therefore, computed addresses are just guesses, and ARE NOT RELIABLE.
+# WARNING | Make sure to attach Serviceability Agent to get the reliable addresses.
+# Object alignment: 8 bytes
+#                       ref, bool, byte, char, shrt,  int,  flt,  lng,  dbl
+# Field sizes:            4,    1,    1,    2,    2,    4,    4,    8,    8
+# Array element sizes:    4,    1,    1,    2,    2,    4,    4,    8,    8
+# Array base offsets:    16,   16,   16,   16,   16,   16,   16,   16,   16
