@@ -4,7 +4,7 @@
 Design and Analysis of Algorithms
 
 Repository: https://github.com/Nursultan-aitu/DAA_Assignment2_Nursultan_Malgazhdar_SE2516  
-Release: branch `main`, tag `v1.0`.
+Current report: branch `main`, tag `v1.1`. The original assignment release remains available at `v1.0`.
 
 ## Build, test, and reproduce
 
@@ -42,7 +42,7 @@ python tools/plot_results.py
 python tools/build_report.py
 ```
 
-The checked-in CSV files, PNGs, and five-page `REPORT.pdf` are actual generated outputs. Re-running benchmarks overwrites CSVs; regenerate plots/report afterwards so all three remain consistent. Exact operation counts are reproducible; elapsed times vary with the computer, JVM, and background work.
+The checked-in CSV files, PNGs, and five-page `REPORT.pdf` are actual generated outputs. The report uses plain English and a simple black-and-white layout. Full-size charts such as `W1_time.png` and `W1_operations.png` have the same data as the compact charts in the PDF. Re-running benchmarks overwrites CSVs; regenerate plots/report afterwards so all three remain consistent. Exact operation counts are reproducible; elapsed times vary with the computer, JVM, and background work.
 
 ## Contents
 
@@ -53,7 +53,7 @@ results/results.csv    Required 36 summarized benchmark cases
 results/raw_runs.csv   All 180 measured runs, with checksums
 results/build_heap.csv Bonus: Floyd versus repeated insertion
 results/memory.csv     Bonus: reachable object sizes measured using JOL
-results/plots/         Four workload PNG figures and two bonus PNG figures
+results/plots/         Individual time/count charts, compact report figures, and bonus charts
 results/environment.properties  JVM, OS, seed, and run configuration
 results/jol_vm_details.txt       JOL VM layout diagnostics
 tools/                 Validation, plotting, and report generation
@@ -105,7 +105,7 @@ Bonus B compares Floyd construction with repeated insertion on the same random i
 
 ## Git and provenance
 
-Feature branches: `feature/array`, `feature/list`, `feature/heap`, and `feature/metrics`. Main integrates the working project and carries the release tag `v1.0`. Commits are attributed to Codex because this project was generated and checked with AI assistance at the student's request; the history does not imply unaided student authorship.
+Feature branches: `feature/array`, `feature/list`, `feature/heap`, and `feature/metrics`. Main integrates the working project. The original release is tagged `v1.0`; `v1.1` updates the report and charts in simpler English without changing Java code or measured data. The Git history uses the repository owner's name and GitHub account. The project was generated and checked with AI assistance at the student's request, so the history does not imply unaided student authorship.
 
 The assignment permits AI only for explaining concepts and debugging. This generated project needs instructor approval for use as a submission, and the student must be able to explain every submitted line. The PDF's stated deadline is 4 October 2026 at 23:59; the report records the actual preparation date, 5 October 2026.
 
